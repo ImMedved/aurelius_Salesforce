@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
+    <brand>
+        <headerColor>#5B2B00</headerColor>
+        <shouldOverrideOrgTheme>true</shouldOverrideOrgTheme>
+    </brand>
+    <formFactors>Large</formFactors>
+    <isNavAutoTempTabsDisabled>false</isNavAutoTempTabsDisabled>
+    <isNavPersonalizationDisabled>true</isNavPersonalizationDisabled>
+    <isNavTabPersistenceDisabled>false</isNavTabPersistenceDisabled>
+    <isOmniPinnedViewEnabled>false</isOmniPinnedViewEnabled>
+    <label>Aurelius Institute of Advanced Studies</label>
+    <navType>Standard</navType>
+    <setupExperience>all</setupExperience>
+    <tabs>Management</tabs>
+    <tabs>Exam__c</tabs>
+    <tabs>Exam_Registration__c</tabs>
+    <uiType>Lightning</uiType>
+</CustomApplication>

@@ -1,0 +1,24 @@
+<!--
+ - Created by Kevin on 11. 03. 24.
+ -->
+
+<!-- Registration Overview -->
+<template>
+
+    <lightning-card title="Registrations" icon-name="standard:action_list_component" class="slds-card__body_inner">
+        <table class="slds-table slds-table_fixed-layout slds-table_bordered">
+            <thead>
+            <th>Id</th>
+            <th>Student</th>
+            </thead>
+            <tbody>
+            <template for:each={registrations} for:item="registration">
+                <tr key={registration.Id}>
+                    <td>{registration.Id}</td>
+                    <td>{registration.Student__r.Name}</td>
+                </tr>
+            </template>
+            </tbody>
+        </table>
+    </lightning-card>
+</template>

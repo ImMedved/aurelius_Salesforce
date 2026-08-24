@@ -1,0 +1,24 @@
+<!--
+ - Created by Kevin on 28. 02. 24.
+ -->
+
+<!-- New Student -->
+<template>
+
+    <lightning-card icon-name="standard:user" title="New Student" class="slds-card__body_inner">
+        <div class="slds-m-bottom_small">
+            <lightning-input label="First Name" type="text" data-input="firstName"></lightning-input>
+            <lightning-input label="Last Name" type="text" data-input="lastName"></lightning-input>
+            <lightning-input label="EMSO" type="number" data-input="emso"></lightning-input>
+            <lightning-combobox
+                    label="Enrollment Type"
+                    data-input="enrollmentType"
+                    options={enrollmentTypeOptions}>
+            </lightning-combobox>
+        </div>
+
+        <lightning-button label="Create" variant="brand" onclick={handleCreateStudent}></lightning-button>
+
+    </lightning-card>
+
+</template>
