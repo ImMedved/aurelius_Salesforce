@@ -6,18 +6,27 @@
     <trackTrending>false</trackTrending>
     <type>Picklist</type>
     <valueSet>
-        <restricted>true</restricted>
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>Registered</fullName>
+                <fullName>Not yet completed</fullName>
                 <default>false</default>
-                <label>Registered</label>
+                <label>Not yet completed</label>
             </value>
             <value>
-                <fullName>Canceled</fullName>
+                <fullName>Completed</fullName>
                 <default>false</default>
-                <label>Canceled</label>
+                <label>Completed</label>
+            </value>
+            <value>
+                <fullName>Not completed</fullName>
+                <default>false</default>
+                <label>Not completed</label>
+            </value>
+            <value>
+                <fullName>Unregistered</fullName>
+                <default>false</default>
+                <label>Unregistered</label>
             </value>
         </valueSetDefinition>
     </valueSet>

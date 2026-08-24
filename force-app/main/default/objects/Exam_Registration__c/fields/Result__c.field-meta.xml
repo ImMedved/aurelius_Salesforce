@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Enrollment_Type__c</fullName>
-    <label>Enrollment Type</label>
+    <fullName>Result__c</fullName>
+    <label>Result</label>
     <required>false</required>
     <trackTrending>false</trackTrending>
     <type>Picklist</type>
@@ -10,14 +10,14 @@
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>Full-Time</fullName>
+                <fullName>Passed</fullName>
                 <default>false</default>
-                <label>Full-Time</label>
+                <label>Passed</label>
             </value>
             <value>
-                <fullName>Part-time</fullName>
+                <fullName>Not passed</fullName>
                 <default>false</default>
-                <label>Part-time</label>
+                <label>Not passed</label>
             </value>
         </valueSetDefinition>
     </valueSet>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Exam__c</fullName>
-    <label>Exam Period</label>
-    <referenceTo>Exam__c</referenceTo>
-    <relationshipLabel>Exam Registrations</relationshipLabel>
-    <relationshipName>Exam_Registrations</relationshipName>
+    <fullName>Subject__c</fullName>
+    <label>Subject</label>
+    <referenceTo>Subject__c</referenceTo>
+    <relationshipLabel>Subject Enrollments</relationshipLabel>
+    <relationshipName>Subject_Enrollments</relationshipName>
     <relationshipOrder>1</relationshipOrder>
     <reparentableMasterDetail>false</reparentableMasterDetail>
     <trackTrending>false</trackTrending>

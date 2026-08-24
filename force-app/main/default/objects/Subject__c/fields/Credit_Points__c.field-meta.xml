@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Last_Name__c</fullName>
+    <fullName>Credit_Points__c</fullName>
     <externalId>false</externalId>
-    <label>Last Name</label>
-    <length>40</length>
-    <required>false</required>
+    <label>Credit Points</label>
+    <precision>18</precision>
+    <required>true</required>
+    <scale>0</scale>
     <trackTrending>false</trackTrending>
-    <type>Text</type>
+    <type>Number</type>
     <unique>false</unique>
 </CustomField>
