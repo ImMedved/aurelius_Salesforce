@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Payer_Only_For_Part_Time</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+    Payer__c,
+    NOT(ISPICKVAL(Enrollment_Type__c, &quot;Part-time student&quot;))
+)</errorConditionFormula>
+    <errorMessage>Payer can only be selected for a part-time student.</errorMessage>
+</ValidationRule>
