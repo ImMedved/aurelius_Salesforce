@@ -65,3 +65,8 @@ Unregistration Date     Unregistration_Date__c   Date       Conditional
 Student 1 -- N Enrollment N -- 1 Subject 1 -- N Exam Period 1 -- N Exam Registration N -- 1 Student
 
 TODO: заменить EMSO на текст.
+
+Шаг 3: добавить tabs для всех 5 объектов
+
+
+
