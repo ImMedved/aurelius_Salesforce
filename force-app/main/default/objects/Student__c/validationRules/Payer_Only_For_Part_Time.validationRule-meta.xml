@@ -4,7 +4,7 @@
     <active>true</active>
     <errorConditionFormula>AND(
     Payer__c,
-    NOT(ISPICKVAL(Enrollment_Type__c, &quot;Part-time student&quot;))
+    NOT(ISPICKVAL(Enrollment_Type__c, &quot;Part-time Student&quot;))
 )</errorConditionFormula>
     <errorMessage>Payer can only be selected for a part-time student.</errorMessage>
 </ValidationRule>

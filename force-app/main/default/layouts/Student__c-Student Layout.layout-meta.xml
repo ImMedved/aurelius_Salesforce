@@ -10,7 +10,7 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>EMSO__c</field>
+                <field>EMSO_Text__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
@@ -71,7 +71,7 @@
         <style>CustomLinks</style>
     </layoutSections>
     <miniLayout>
-        <fields>EMSO__c</fields>
+        <fields>EMSO_Text__c</fields>
         <fields>Enrollment_Type__c</fields>
         <fields>First_Name__c</fields>
         <fields>Last_Name__c</fields>

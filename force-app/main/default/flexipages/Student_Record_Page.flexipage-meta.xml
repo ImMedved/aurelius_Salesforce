@@ -41,8 +41,8 @@
                     <name>uiBehavior</name>
                     <value>required</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.EMSO__c</fieldItem>
-                <identifier>RecordEMSO_cField</identifier>
+                <fieldItem>Record.EMSO_Text__c</fieldItem>
+                <identifier>RecordEMSO_Text_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>

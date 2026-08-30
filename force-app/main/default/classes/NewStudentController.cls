@@ -6,22 +6,18 @@ public with sharing class NewStudentController {
 
 	@AuraEnabled
 	public static Boolean createStudent(String studentJSON) {
-		Boolean response = true;
-
-		Student studentPARSED = (Student) System.JSON.deserialize(studentJSON, Student.class);
+		Student studentParsed = (Student) System.JSON.deserialize(studentJSON, Student.class);
 
 		Student__c student = new Student__c();
-		student.First_Name__c = studentPARSED.firstName;
-		student.Last_Name__c = studentPARSED.lastName;
-		student.Enrollment_Type__c = studentPARSED.enrollmentType;
-		//TODO - EMSO CHECK, EMSO UNIQUEx
-		student.EMSO__c = studentPARSED.emso;
+		student.First_Name__c = studentParsed.firstName;
+		student.Last_Name__c = studentParsed.lastName;
+		student.Enrollment_Type__c = studentParsed.enrollmentType;
+		student.EMSO_Text__c = studentParsed.emso;
+		student.Payer__c = studentParsed.payer == true;
 
-		if(String.valueOf(student.EMSO__c).split('').size() == 13) {
-			insert student;
-		}
+		insert student;
 
-		return response;
+		return true;
 	}
 
 	//TODO - Wrapper or casting directly in Student__c object?
@@ -29,6 +25,7 @@ public with sharing class NewStudentController {
 		public String firstName;
 		public String lastName;
 		public String enrollmentType;
-		public Long emso;
+		public String emso;
+		public Boolean payer;
 	}
 }

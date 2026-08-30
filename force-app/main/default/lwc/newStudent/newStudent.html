@@ -9,12 +9,13 @@
         <div class="slds-m-bottom_small">
             <lightning-input label="First Name" type="text" data-input="firstName"></lightning-input>
             <lightning-input label="Last Name" type="text" data-input="lastName"></lightning-input>
-            <lightning-input label="EMSO" type="number" data-input="emso"></lightning-input>
-            <lightning-combobox
-                    label="Enrollment Type"
-                    data-input="enrollmentType"
-                    options={enrollmentTypeOptions}>
+            <lightning-input label="EMŠO" type="text" maxlength="13" data-input="emso"></lightning-input>
+            <lightning-combobox label="Enrollment Type" data-input="enrollmentType" options={enrollmentTypeOptions}
+                onchange={handleEnrollmentTypeChange}>
             </lightning-combobox>
+            <template if:true={showPayerField}>
+                <lightning-input label="Payer" type="checkbox" data-input="payer"></lightning-input>
+            </template>
         </div>
 
         <lightning-button label="Create" variant="brand" onclick={handleCreateStudent}></lightning-button>
