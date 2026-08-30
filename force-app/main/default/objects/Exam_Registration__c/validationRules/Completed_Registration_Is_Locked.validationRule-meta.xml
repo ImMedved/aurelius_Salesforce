@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Completed_Registration_Is_Locked</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+    ISPICKVAL(
+        PRIORVALUE(Registration_Status__c),
+        &quot;Completed&quot;
+    ),
+    OR(
+        ISCHANGED(Student__c),
+        ISCHANGED(Exam__c),
+        ISCHANGED(Registration_Status__c),
+        ISCHANGED(Unregistration_Date__c)
+    )
+)</errorConditionFormula>
+    <errorMessage>Only the grade of a completed exam can be changed.</errorMessage>
+</ValidationRule>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Completed_Requires_Grade</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+    ISPICKVAL(Registration_Status__c, &quot;Completed&quot;),
+    ISBLANK(Grade__c)
+)</errorConditionFormula>
+    <errorDisplayField>Grade__c</errorDisplayField>
+    <errorMessage>A completed exam must have a grade.</errorMessage>
+</ValidationRule>

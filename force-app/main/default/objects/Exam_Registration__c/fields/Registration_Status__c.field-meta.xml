@@ -10,7 +10,7 @@
             <sorted>false</sorted>
             <value>
                 <fullName>Not yet completed</fullName>
-                <default>false</default>
+                <default>true</default>
                 <label>Not yet completed</label>
             </value>
             <value>

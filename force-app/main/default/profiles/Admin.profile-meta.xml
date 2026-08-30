@@ -20,7 +20,7 @@
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
-        <editable>true</editable>
+        <editable>false</editable>
         <field>Exam_Registration__c.Result__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -34,6 +34,10 @@
         <field>Student__c.Payer__c</field>
         <readable>true</readable>
     </fieldPermissions>
+    <flowAccesses>
+        <enabled>false</enabled>
+        <flow>Auto_Date_Unregistration</flow>
+    </flowAccesses>
     <layoutAssignments>
         <layout>Exam_Registration__c-Exam Registration Layout</layout>
     </layoutAssignments>

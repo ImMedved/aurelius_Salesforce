@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Grade_Only_For_Completed</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+    NOT(ISBLANK(Grade__c)),
+    NOT(ISPICKVAL(Registration_Status__c, &quot;Completed&quot;))
+)</errorConditionFormula>
+    <errorDisplayField>Grade__c</errorDisplayField>
+    <errorMessage>A grade can only be entered for a completed exam.</errorMessage>
+</ValidationRule>

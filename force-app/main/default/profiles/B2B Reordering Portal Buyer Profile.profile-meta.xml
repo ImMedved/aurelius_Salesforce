@@ -34,6 +34,10 @@
         <field>Student__c.Payer__c</field>
         <readable>false</readable>
     </fieldPermissions>
+    <flowAccesses>
+        <enabled>false</enabled>
+        <flow>Auto_Date_Unregistration</flow>
+    </flowAccesses>
     <layoutAssignments>
         <layout>Exam_Registration__c-Exam Registration Layout</layout>
     </layoutAssignments>
