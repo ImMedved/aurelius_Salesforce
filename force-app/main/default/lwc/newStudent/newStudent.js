@@ -2,59 +2,48 @@
  * Created by Kevin on 28. 02. 24.
  */
 
-import { LightningElement, track } from 'lwc';
-import { ShowToastEvent } from "lightning/platformShowToastEvent";
-import createStudent from "@salesforce/apex/NewStudentController.createStudent";
+import { LightningElement } from 'lwc';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class NewStudent extends LightningElement {
-    @track student = {};
-    enrollmentTypeOptions = [
-        { label: "Regular Student", value: "Regular Student" },
-        { label: "Part-time Student", value: "Part-time Student" }
-    ];
+    enrollmentType;
 
     get showPayerField() {
-        return this.student.enrollmentType === 'Part-time Student';
+        return this.enrollmentType === 'Part-time Student';
     }
 
     handleEnrollmentTypeChange(event) {
-        this.student = {
-            ...this.student,
-            enrollmentType: event.detail.value
-        };
+        this.enrollmentType = event.detail?.value ?? event.target.value;
     }
 
-    handleCreateStudent() {
-        let fields = this.template.querySelectorAll('[data-input]');
-        this.student = {};
-        for (let i = 0; i < fields.length; i++) {
-            let field = fields[i];
-            this.student[field.dataset.input] = field.type == 'checkbox' ? field.checked : field.value;
-        }
-
-        createStudent({ studentJSON: JSON.stringify(this.student) })
-            .then((result) => {
-                this.dispatchEvent(new ShowToastEvent({
-                    title: 'Success',
-                    message: 'Student created',
-                    variant: 'success',
-                }));
-                this.clearFields(fields);
+    handleSuccess() {
+        this.dispatchEvent(
+            new ShowToastEvent({
+                title: 'Success',
+                message: 'Student created successfully.',
+                variant: 'success'
             })
-            .catch((error) => {
-                this.dispatchEvent(new ShowToastEvent({
-                    title: 'Error',
-                    message: 'Something went wrong',
-                    variant: 'error',
-                }));
-            });
+        );
+
+        this.template
+            .querySelectorAll('lightning-input-field')
+            .forEach(field => field.reset());
+
+        this.enrollmentType = null;
     }
 
-    clearFields = (fieldList) => {
-        [...fieldList].reduce((validSoFar, inputCmp) => {
-            inputCmp.value = null;
-            inputCmp.checked = false;
-        }, true);
-        this.student = {};
-    };
+    handleError(event) {
+        const message =
+            event.detail?.detail ||
+            event.detail?.message ||
+            'Unable to create student.';
+
+        this.dispatchEvent(
+            new ShowToastEvent({
+                title: 'Error',
+                message,
+                variant: 'error'
+            })
+        );
+    }
 }
