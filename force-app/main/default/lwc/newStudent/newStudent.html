@@ -5,32 +5,58 @@
 <!-- New Student -->
 <template>
 
-    <lightning-card icon-name="standard:user" title="New Student" class="slds-card__body_inner">
+    <lightning-card icon-name="standard:user" title="Student Entry" class="slds-card__body_inner">
 
         <lightning-record-edit-form object-api-name="Student__c" onsuccess={handleSuccess} onerror={handleError}>
 
             <lightning-messages></lightning-messages>
 
             <div class="slds-m-bottom_small">
-                <lightning-input-field field-name="First_Name__c">
-                </lightning-input-field>
+                <div class="slds-form-element slds-form-element_horizontal">
+                    <label class="slds-form-element__label">Name</label>
+                    <div class="slds-form-element__control">
+                        <lightning-input-field field-name="First_Name__c" variant="label-hidden">
+                        </lightning-input-field>
+                    </div>
+                </div>
 
-                <lightning-input-field field-name="Last_Name__c">
-                </lightning-input-field>
+                <div class="slds-form-element slds-form-element_horizontal">
+                    <label class="slds-form-element__label">Surname</label>
+                    <div class="slds-form-element__control">
+                        <lightning-input-field field-name="Last_Name__c" variant="label-hidden">
+                        </lightning-input-field>
+                    </div>
+                </div>
 
-                <lightning-input-field field-name="EMSO_Text__c">
-                </lightning-input-field>
+                <div class="slds-form-element slds-form-element_horizontal">
+                    <label class="slds-form-element__label">EMŠO</label>
+                    <div class="slds-form-element__control">
+                        <lightning-input-field field-name="EMSO_Text__c" variant="label-hidden">
+                        </lightning-input-field>
+                    </div>
+                </div>
 
-                <lightning-input-field field-name="Enrollment_Type__c" onchange={handleEnrollmentTypeChange}>
-                </lightning-input-field>
+                <div class="slds-form-element slds-form-element_horizontal">
+                    <label class="slds-form-element__label">Type</label>
+                    <div class="slds-form-element__control">
+                        <lightning-input-field field-name="Enrollment_Type__c" variant="label-hidden"
+                            onchange={handleEnrollmentTypeChange}>
+                        </lightning-input-field>
+                    </div>
+                </div>
 
                 <template if:true={showPayerField}>
-                    <lightning-input-field field-name="Payer__c">
-                    </lightning-input-field>
+                    <div class="slds-form-element slds-form-element_horizontal">
+                        <label class="slds-form-element__label">Payer</label>
+                        <div class="slds-form-element__control">
+                            <lightning-input-field field-name="Payer__c" variant="label-hidden">
+                            </lightning-input-field>
+                        </div>
+                    </div>
                 </template>
             </div>
 
-            <lightning-button type="submit" label="Create" variant="brand">
+            <lightning-button type="submit" label="Insert" variant="brand">
             </lightning-button>
 
         </lightning-record-edit-form>

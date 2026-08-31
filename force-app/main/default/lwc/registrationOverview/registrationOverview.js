@@ -14,7 +14,7 @@ import registerStudent from '@salesforce/apex/RegistrationOverviewController.reg
 import unregisterStudent from '@salesforce/apex/RegistrationOverviewController.unregisterStudent';
 
 export default class RegistrationOverview extends LightningElement {
-    selectedSubjectId = null;
+    selectedSubjectId = '';
     modalStudentId = null;
     modalSubjectId = null;
     modalExamPeriodId = null;
@@ -46,7 +46,7 @@ export default class RegistrationOverview extends LightningElement {
         }
     }
 
-    @wire(getExamPeriods, { courseId: '$selectedSubjectId' })
+    @wire(getExamPeriods, { courseId: '$selectedSubjectFilterId' })
     wiredExamPeriods({ data, error }) {
         if (data) {
             this.examPeriods = data;
@@ -56,7 +56,7 @@ export default class RegistrationOverview extends LightningElement {
     }
 
     @wire(getRegistrations, {
-        courseId: '$selectedSubjectId',
+        courseId: '$selectedSubjectFilterId',
         examPeriodId: null
     })
     wiredRegistrations(result) {
@@ -72,14 +72,21 @@ export default class RegistrationOverview extends LightningElement {
     }
 
     get subjectOptions() {
-        return this.subjects.map(subject => ({
-            label: subject.Name,
-            value: subject.Id
-        }));
+        return [
+            { label: 'All Subjects', value: '' },
+            ...this.subjects.map(subject => ({
+                label: subject.Name,
+                value: subject.Id
+            }))
+        ];
+    }
+
+    get selectedSubjectFilterId() {
+        return this.selectedSubjectId || null;
     }
 
     get modalSubjectOptions() {
-        return this.subjectOptions;
+        return this.subjectOptions.filter(option => option.value);
     }
 
     get studentOptions() {
@@ -130,12 +137,12 @@ export default class RegistrationOverview extends LightningElement {
     }
 
     handleSubjectChange(event) {
-        this.selectedSubjectId = event.detail.value || null;
+        this.selectedSubjectId = event.detail.value || '';
     }
 
     openRegistrationModal() {
         this.modalStudentId = null;
-        this.modalSubjectId = this.selectedSubjectId;
+        this.modalSubjectId = this.selectedSubjectFilterId;
         this.modalExamPeriodId = null;
         this.modalExamPeriods = [];
         this.showRegistrationModal = true;

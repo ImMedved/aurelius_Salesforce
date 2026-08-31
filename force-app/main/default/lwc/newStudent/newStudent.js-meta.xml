@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>56.0</apiVersion>
-    <description>New Student</description>
+    <description>Student Entry</description>
     <isExposed>true</isExposed>
     <targets>
         <target>lightning__AppPage</target>
         <target>lightning__HomePage</target>
     </targets>
-    <masterLabel>New Student</masterLabel>
+    <masterLabel>Student Entry</masterLabel>
 </LightningComponentBundle>

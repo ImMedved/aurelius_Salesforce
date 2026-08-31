@@ -1,22 +1,37 @@
 <template>
-    <lightning-card icon-name="standard:event" title="New Exam Period" class="slds-card__body_inner">
+    <lightning-card icon-name="standard:event" title="Exam Period Entry" class="slds-card__body_inner">
 
         <lightning-record-edit-form object-api-name="Exam__c" onsuccess={handleSuccess} onerror={handleError}>
 
             <lightning-messages></lightning-messages>
 
             <div class="slds-m-bottom_small">
-                <lightning-input-field field-name="Name" required>
-                </lightning-input-field>
+                <div class="slds-form-element slds-form-element_horizontal">
+                    <label class="slds-form-element__label">Exam Period Name</label>
+                    <div class="slds-form-element__control">
+                        <lightning-input-field field-name="Name" required variant="label-hidden">
+                        </lightning-input-field>
+                    </div>
+                </div>
 
-                <lightning-input-field field-name="Subject__c">
-                </lightning-input-field>
+                <div class="slds-form-element slds-form-element_horizontal">
+                    <label class="slds-form-element__label">Subject</label>
+                    <div class="slds-form-element__control">
+                        <lightning-input-field field-name="Subject__c" variant="label-hidden">
+                        </lightning-input-field>
+                    </div>
+                </div>
 
-                <lightning-input-field field-name="Date__c">
-                </lightning-input-field>
+                <div class="slds-form-element slds-form-element_horizontal">
+                    <label class="slds-form-element__label">Date</label>
+                    <div class="slds-form-element__control">
+                        <lightning-input-field field-name="Date__c" variant="label-hidden">
+                        </lightning-input-field>
+                    </div>
+                </div>
             </div>
 
-            <lightning-button type="submit" label="Create" variant="brand">
+            <lightning-button type="submit" label="Insert" variant="brand">
             </lightning-button>
 
         </lightning-record-edit-form>
