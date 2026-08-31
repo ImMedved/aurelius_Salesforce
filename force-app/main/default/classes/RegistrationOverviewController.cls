@@ -80,20 +80,6 @@ public with sharing class RegistrationOverviewController {
 			Student__c = studentId,
 			Exam__c = examPeriodId
 		);
-		
-		List<Exam_Registration__c> existing = [
-			SELECT Id, Registration_Status__c
-			FROM Exam_Registration__c
-			WHERE Student__c = :studentId
-			AND Exam__c = :examPeriodId
-			LIMIT 1
-		];
-
-		if (!existing.isEmpty()) {
-			throw new AuraHandledException(
-				'Student is already registered for this exam period.'
-			);
-		}
 
 		insert registration;
 		return registration.Id;

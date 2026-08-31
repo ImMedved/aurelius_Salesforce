@@ -62,7 +62,7 @@ Result                  Result__c                Picklist   Conditional        P
 Grade                   Grade__c                 Number(2,0)   Conditional
 Unregistration Date     Unregistration_Date__c   Date       Conditional
 
-Student 1 -- N Enrollment N -- 1 Subject 1 -- N Exam Period 1 -- N Exam Registration N -- 1 Student
+Student 1 -- N Enrollment N -- 1 Subject 1 -- N Exam 1 -- N Exam Registration N -- 1 Student
 
 TODO: заменить EMSO на текст.
 
