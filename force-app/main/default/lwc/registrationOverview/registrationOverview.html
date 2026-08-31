@@ -4,21 +4,93 @@
 
 <!-- Registration Overview -->
 <template>
+    <lightning-card icon-name="standard:record" title="Registration Management">
 
-    <lightning-card title="Registrations" icon-name="standard:action_list_component" class="slds-card__body_inner">
-        <table class="slds-table slds-table_fixed-layout slds-table_bordered">
-            <thead>
-            <th>Id</th>
-            <th>Student</th>
-            </thead>
-            <tbody>
-            <template for:each={registrations} for:item="registration">
-                <tr key={registration.Id}>
-                    <td>{registration.Id}</td>
-                    <td>{registration.Student__r.Name}</td>
-                </tr>
-            </template>
-            </tbody>
-        </table>
+        <div class="slds-p-around_medium">
+
+            <div class="slds-grid slds-gutters slds-wrap">
+
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-combobox name="course" label="Course" value={selectedCourseId} options={courseOptions}
+                        onchange={handleCourseChange}>
+                    </lightning-combobox>
+                </div>
+
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-combobox name="examPeriod" label="Exam Period" value={selectedExamPeriodId}
+                        options={examPeriodOptions} onchange={handleExamPeriodChange}>
+                    </lightning-combobox>
+                </div>
+
+            </div>
+
+            <div class="slds-m-top_medium">
+                <lightning-button label="Clear Filters" onclick={handleClearFilters}>
+                </lightning-button>
+                <lightning-button class="slds-m-left_small" label="Register Student" variant="brand"
+                    onclick={openRegistrationModal}>
+                </lightning-button>
+            </div>
+
+            <div class="slds-m-top_medium">
+
+                <template if:true={hasRegistrations}>
+                    <lightning-datatable key-field="id" data={registrationRows} columns={columns} hide-checkbox-column
+                        onrowaction={handleRowAction}>
+                    </lightning-datatable>
+                </template>
+
+                <template if:false={hasRegistrations}>
+                    <div class="slds-text-color_weak slds-p-vertical_medium">
+                        No registrations found.
+                    </div>
+                </template>
+
+            </div>
+
+        </div>
+
     </lightning-card>
+    <template if:true={showRegistrationModal}>
+        <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="registration-modal-heading"
+            class="slds-modal slds-fade-in-open">
+
+            <div class="slds-modal__container">
+
+                <header class="slds-modal__header">
+                    <h2 id="registration-modal-heading" class="slds-text-heading_medium">
+                        Register Student
+                    </h2>
+                </header>
+
+                <div class="slds-modal__content slds-p-around_medium">
+
+                    <lightning-combobox label="Student" value={modalStudentId} options={studentOptions}
+                        onchange={handleModalStudentChange} required>
+                    </lightning-combobox>
+
+                    <lightning-combobox label="Course" value={modalCourseId} options={modalCourseOptions}
+                        onchange={handleModalCourseChange} required>
+                    </lightning-combobox>
+
+                    <lightning-combobox label="Exam Period" value={modalExamPeriodId} options={modalExamPeriodOptions}
+                        onchange={handleModalExamPeriodChange} required disabled={isModalExamPeriodDisabled}>
+                    </lightning-combobox>
+
+                </div>
+
+                <footer class="slds-modal__footer">
+                    <lightning-button label="Cancel" onclick={closeRegistrationModal}>
+                    </lightning-button>
+
+                    <lightning-button class="slds-m-left_small" label="Save" variant="brand"
+                        onclick={handleRegisterStudent}>
+                    </lightning-button>
+                </footer>
+
+            </div>
+        </section>
+
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
 </template>
