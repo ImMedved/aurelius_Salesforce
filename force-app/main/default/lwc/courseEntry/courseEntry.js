@@ -6,7 +6,7 @@ export default class CourseEntry extends LightningElement {
         this.dispatchEvent(
             new ShowToastEvent({
                 title: 'Success',
-                message: 'Course created successfully.',
+                message: 'Subject created successfully.',
                 variant: 'success'
             })
         );
@@ -20,7 +20,7 @@ export default class CourseEntry extends LightningElement {
         const message =
             event.detail?.detail ||
             event.detail?.message ||
-            'Unable to create course.';
+            'Unable to create subject.';
 
         this.dispatchEvent(
             new ShowToastEvent({

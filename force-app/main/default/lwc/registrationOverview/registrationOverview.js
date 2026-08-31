@@ -3,68 +3,27 @@
  */
 
 import { LightningElement, wire } from 'lwc';
+import { refreshApex } from '@salesforce/apex';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 import getCourses from '@salesforce/apex/RegistrationOverviewController.getCourses';
 import getExamPeriods from '@salesforce/apex/RegistrationOverviewController.getExamPeriods';
 import getRegistrations from '@salesforce/apex/RegistrationOverviewController.getRegistrations';
-
-import { refreshApex } from '@salesforce/apex';
-import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getStudents from '@salesforce/apex/RegistrationOverviewController.getStudents';
 import registerStudent from '@salesforce/apex/RegistrationOverviewController.registerStudent';
 import unregisterStudent from '@salesforce/apex/RegistrationOverviewController.unregisterStudent';
 
-const COLUMNS = [
-    {
-        label: 'Student',
-        fieldName: 'studentName'
-    },
-    {
-        label: 'EMŠO',
-        fieldName: 'emso'
-    },
-    {
-        label: 'Course',
-        fieldName: 'courseName'
-    },
-    {
-        label: 'Exam Period',
-        fieldName: 'examPeriodName'
-    },
-    {
-        label: 'Date',
-        fieldName: 'examDate',
-        type: 'date'
-    },
-    {
-        label: 'Status',
-        fieldName: 'status'
-    },
-    {
-        label: 'Grade',
-        fieldName: 'grade',
-        type: 'number'
-    },
-    {
-        label: 'Result',
-        fieldName: 'result'
-    }
-];
-
 export default class RegistrationOverview extends LightningElement {
-    columns = COLUMNS;
-
-    selectedCourseId = null;
-    selectedExamPeriodId = null;
+    selectedSubjectId = null;
     modalStudentId = null;
-    modalCourseId = null;
+    modalSubjectId = null;
     modalExamPeriodId = null;
 
-    modalExamPeriods = [];
-    courses = [];
+    subjects = [];
     examPeriods = [];
     registrations = [];
     students = [];
+    modalExamPeriods = [];
 
     showRegistrationModal = false;
     wiredRegistrationsResult;
@@ -74,31 +33,31 @@ export default class RegistrationOverview extends LightningElement {
         if (data) {
             this.students = data;
         } else if (error) {
-            console.error(error);
+            this.showError(error, 'Unable to load students.');
         }
     }
 
     @wire(getCourses)
-    wiredCourses({ data, error }) {
+    wiredSubjects({ data, error }) {
         if (data) {
-            this.courses = data;
+            this.subjects = data;
         } else if (error) {
-            console.error(error);
+            this.showError(error, 'Unable to load subjects.');
         }
     }
 
-    @wire(getExamPeriods, { courseId: '$selectedCourseId' })
+    @wire(getExamPeriods, { courseId: '$selectedSubjectId' })
     wiredExamPeriods({ data, error }) {
         if (data) {
             this.examPeriods = data;
         } else if (error) {
-            console.error(error);
+            this.showError(error, 'Unable to load exam periods.');
         }
     }
 
     @wire(getRegistrations, {
-        courseId: '$selectedCourseId',
-        examPeriodId: '$selectedExamPeriodId'
+        courseId: '$selectedSubjectId',
+        examPeriodId: null
     })
     wiredRegistrations(result) {
         this.wiredRegistrationsResult = result;
@@ -108,45 +67,32 @@ export default class RegistrationOverview extends LightningElement {
         if (data) {
             this.registrations = data;
         } else if (error) {
-            console.error(error);
+            this.showError(error, 'Unable to load registrations.');
         }
+    }
+
+    get subjectOptions() {
+        return this.subjects.map(subject => ({
+            label: subject.Name,
+            value: subject.Id
+        }));
+    }
+
+    get modalSubjectOptions() {
+        return this.subjectOptions;
     }
 
     get studentOptions() {
         return this.students.map(student => ({
             label: [
                 student.First_Name__c,
-                student.Last_Name__c
+                student.Last_Name__c,
+                student.EMSO_Text__c
             ]
                 .filter(Boolean)
-                .join(' '),
-
+                .join(', '),
             value: student.Id
         }));
-    }
-
-    get modalCourseOptions() {
-        return this.courseOptions.filter(option => option.value);
-    }
-
-    get courseOptions() {
-        return [
-            { label: 'All Courses', value: '' },
-            ...this.courses.map(course => ({
-                label: course.Name,
-                value: course.Id
-            }))
-        ];
-    }
-
-    get examPeriodOptions() {
-        return [
-            { label: 'All Exam Periods', value: '' },
-            ...this.examPeriods.map(exam => ({
-                label: exam.Name,
-                value: exam.Id
-            }))
-        ];
     }
 
     get modalExamPeriodOptions() {
@@ -156,56 +102,45 @@ export default class RegistrationOverview extends LightningElement {
         }));
     }
 
-    get registrationRows() {
-        return this.registrations.map(registration => ({
-            id: registration.Id,
-
-            studentName: [
-                registration.Student__r?.First_Name__c,
-                registration.Student__r?.Last_Name__c
-            ]
-                .filter(Boolean)
-                .join(' '),
-
-            emso:
-                registration.Student__r?.EMSO_Text__c ?? '',
-
-            courseName:
-                registration.Exam__r?.Subject__r?.Name ?? '',
-
-            examPeriodName:
-                registration.Exam__r?.Name ?? '',
-
-            examDate:
-                registration.Exam__r?.Date__c ?? null,
-
-            status:
-                registration.Registration_Status__c ?? '',
-
-            grade:
-                registration.Grade__c ?? null,
-
-            result:
-                registration.Result__c ?? '',
-            unregisterDisabled:
-                registration.Registration_Status__c === 'Completed' ||
-                registration.Registration_Status__c === 'Unregistered'
-        }));
+    get hasExamPeriods() {
+        return this.examPeriodRows.length > 0;
     }
 
-    get hasRegistrations() {
-        return this.registrationRows.length > 0;
+    get isModalExamPeriodDisabled() {
+        return !this.modalSubjectId;
+    }
+
+    get isRegisterDisabled() {
+        return !this.modalStudentId || !this.modalSubjectId || !this.modalExamPeriodId;
+    }
+
+    get examPeriodRows() {
+        return this.examPeriods.map(exam => {
+            const registrations = this.registrations
+                .filter(registration => registration.Exam__c === exam.Id)
+                .map(registration => this.toRegistrationRow(registration));
+
+            return {
+                id: exam.Id,
+                label: `${exam.Name} - ${this.formatDate(exam.Date__c)} (${registrations.length})`,
+                registrations,
+                hasRegistrations: registrations.length > 0
+            };
+        });
+    }
+
+    handleSubjectChange(event) {
+        this.selectedSubjectId = event.detail.value || null;
     }
 
     openRegistrationModal() {
         this.modalStudentId = null;
-        this.modalCourseId = this.selectedCourseId;
+        this.modalSubjectId = this.selectedSubjectId;
         this.modalExamPeriodId = null;
         this.modalExamPeriods = [];
-
         this.showRegistrationModal = true;
 
-        if (this.modalCourseId) {
+        if (this.modalSubjectId) {
             this.loadModalExamPeriods();
         }
     }
@@ -214,28 +149,13 @@ export default class RegistrationOverview extends LightningElement {
         this.showRegistrationModal = false;
     }
 
-    handleCourseChange(event) {
-        this.selectedCourseId = event.detail.value || null;
-        this.selectedExamPeriodId = null;
-    }
-
-    handleExamPeriodChange(event) {
-        this.selectedExamPeriodId = event.detail.value || null;
-    }
-
-    handleClearFilters() {
-        this.selectedCourseId = null;
-        this.selectedExamPeriodId = null;
-    }
-
     handleModalStudentChange(event) {
         this.modalStudentId = event.detail.value;
     }
 
-    async handleModalCourseChange(event) {
-        this.modalCourseId = event.detail.value;
+    async handleModalSubjectChange(event) {
+        this.modalSubjectId = event.detail.value;
         this.modalExamPeriodId = null;
-
         await this.loadModalExamPeriods();
     }
 
@@ -244,14 +164,14 @@ export default class RegistrationOverview extends LightningElement {
     }
 
     async loadModalExamPeriods() {
-        if (!this.modalCourseId) {
+        if (!this.modalSubjectId) {
             this.modalExamPeriods = [];
             return;
         }
 
         try {
             this.modalExamPeriods = await getExamPeriods({
-                courseId: this.modalCourseId
+                courseId: this.modalSubjectId
             });
         } catch (error) {
             this.showError(error, 'Unable to load exam periods.');
@@ -259,19 +179,8 @@ export default class RegistrationOverview extends LightningElement {
     }
 
     async handleRegisterStudent() {
-        if (
-            !this.modalStudentId ||
-            !this.modalCourseId ||
-            !this.modalExamPeriodId
-        ) {
-            this.dispatchEvent(
-                new ShowToastEvent({
-                    title: 'Error',
-                    message: 'Student, Course and Exam Period are required.',
-                    variant: 'error'
-                })
-            );
-
+        if (this.isRegisterDisabled) {
+            this.showToast('Error', 'Student, Subject and Exam Period are required.', 'error');
             return;
         }
 
@@ -281,20 +190,104 @@ export default class RegistrationOverview extends LightningElement {
                 examPeriodId: this.modalExamPeriodId
             });
 
-            this.dispatchEvent(
-                new ShowToastEvent({
-                    title: 'Success',
-                    message: 'Student registered successfully.',
-                    variant: 'success'
-                })
-            );
-
-            this.showRegistrationModal = false;
-
+            this.showToast('Success', 'Student registered successfully.', 'success');
+            this.closeRegistrationModal();
             await refreshApex(this.wiredRegistrationsResult);
         } catch (error) {
             this.showError(error, 'Unable to register student.');
         }
+    }
+
+    async handleUnregister(event) {
+        try {
+            await unregisterStudent({
+                registrationId: event.currentTarget.dataset.id
+            });
+
+            this.showToast('Success', 'Student withdrawn successfully.', 'success');
+            await refreshApex(this.wiredRegistrationsResult);
+        } catch (error) {
+            this.showError(error, 'Unable to withdraw student.');
+        }
+    }
+
+    toRegistrationRow(registration) {
+        const status = this.getDisplayStatus(registration);
+
+        return {
+            id: registration.Id,
+            studentName: [
+                registration.Student__r?.First_Name__c,
+                registration.Student__r?.Last_Name__c
+            ]
+                .filter(Boolean)
+                .join(' '),
+            emso: registration.Student__r?.EMSO_Text__c ?? '',
+            status,
+            statusClass: this.getStatusClass(status),
+            unregisterDisabled:
+                registration.Registration_Status__c === 'Completed' ||
+                registration.Registration_Status__c === 'Unregistered'
+        };
+    }
+
+    getDisplayStatus(registration) {
+        if (registration.Registration_Status__c === 'Not yet completed') {
+            return 'Registered';
+        }
+
+        if (
+            registration.Registration_Status__c === 'Completed' &&
+            registration.Result__c === 'Passed'
+        ) {
+            return 'Completed';
+        }
+
+        if (
+            registration.Registration_Status__c === 'Completed' &&
+            registration.Result__c === 'Not passed'
+        ) {
+            return 'Failed';
+        }
+
+        if (registration.Registration_Status__c === 'Unregistered') {
+            return 'Withdrawn';
+        }
+
+        return registration.Registration_Status__c;
+    }
+
+    formatDate(value) {
+        if (!value) {
+            return '';
+        }
+
+        const [year, month, day] = value.split('-');
+        return `${day}. ${month}. ${year}`;
+    }
+
+    getStatusClass(status) {
+        const baseClass = 'slds-badge status-badge';
+
+        if (status === 'Completed') {
+            return `${baseClass} status-badge_completed`;
+        }
+
+        if (status === 'Failed') {
+            return `${baseClass} status-badge_failed`;
+        }
+
+        return baseClass;
+    }
+
+    showToast(title, message, variant) {
+        this.dispatchEvent(
+            new ShowToastEvent({
+                title,
+                message,
+                variant
+            })
+        );
     }
 
     showError(error, fallbackMessage) {
@@ -303,43 +296,6 @@ export default class RegistrationOverview extends LightningElement {
             error?.detail?.message ||
             fallbackMessage;
 
-        this.dispatchEvent(
-            new ShowToastEvent({
-                title: 'Error',
-                message,
-                variant: 'error'
-            })
-        );
-    }
-
-    async handleRowAction(event) {
-        const action = event.detail.action;
-        const row = event.detail.row;
-
-        if (action.name !== 'unregister') {
-            return;
-        }
-
-        try {
-            await unregisterStudent({
-                registrationId: row.id
-            });
-
-            this.dispatchEvent(
-                new ShowToastEvent({
-                    title: 'Success',
-                    message: 'Student unregistered successfully.',
-                    variant: 'success'
-                })
-            );
-
-            await refreshApex(this.wiredRegistrationsResult);
-        } catch (error) {
-            this.showError(error, 'Unable to unregister student.');
-        }
-    }
-
-    get isModalExamPeriodDisabled() {
-        return !this.modalCourseId;
+        this.showToast('Error', message, 'error');
     }
 }

@@ -1,0 +1,16 @@
+.status-badge {
+    min-width: 5.5rem;
+    justify-content: center;
+}
+
+.status-badge_completed {
+    background: #d8edcf;
+    border: 1px solid #87b875;
+    color: #2e5f22;
+}
+
+.status-badge_failed {
+    background: #f8d3d3;
+    border: 1px solid #e06b6b;
+    color: #9f1d1d;
+}
