@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>No_Completion_Before_Exam</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+    NOT(ISBLANK(Exam__r.Date__c)),
+    Exam__r.Date__c &gt; TODAY(),
+    OR(
+        ISPICKVAL(Registration_Status__c, &quot;Completed&quot;),
+        ISPICKVAL(Registration_Status__c, &quot;Not completed&quot;),
+        NOT(ISBLANK(Grade__c))
+    )
+)</errorConditionFormula>
+    <errorMessage>An exam registration cannot be graded or completed before the exam date.</errorMessage>
+</ValidationRule>

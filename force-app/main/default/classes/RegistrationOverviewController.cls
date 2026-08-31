@@ -76,6 +76,19 @@ public with sharing class RegistrationOverviewController {
 			throw new AuraHandledException('Student and Exam Period are required.');
 		}
 
+		Integer existingRegistrations = [
+			SELECT COUNT()
+			FROM Exam_Registration__c
+			WHERE Student__c = :studentId
+			AND Exam__c = :examPeriodId
+		];
+
+		if (existingRegistrations > 0) {
+			throw new AuraHandledException(
+				'This student is already registered for the selected exam period.'
+			);
+		}
+
 		Exam_Registration__c registration = new Exam_Registration__c(
 			Student__c = studentId,
 			Exam__c = examPeriodId
@@ -92,7 +105,7 @@ public with sharing class RegistrationOverviewController {
 		}
 
 		Exam_Registration__c registration = [
-			SELECT Id, Registration_Status__c
+			SELECT Id, Registration_Status__c, Exam__r.Date__c
 			FROM Exam_Registration__c
 			WHERE Id = :registrationId
 			LIMIT 1
@@ -104,7 +117,17 @@ public with sharing class RegistrationOverviewController {
 			);
 		}
 
+		if (
+			registration.Exam__r.Date__c != null &&
+			Date.today() > registration.Exam__r.Date__c
+		) {
+			throw new AuraHandledException(
+				'Students cannot be withdrawn after the exam date.'
+			);
+		}
+
 		registration.Registration_Status__c = 'Unregistered';
+		registration.Unregistration_Date__c = Date.today();
 		update registration;
 	}
 }

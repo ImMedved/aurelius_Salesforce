@@ -18,6 +18,7 @@ export default class RegistrationOverview extends LightningElement {
     modalStudentId = null;
     modalSubjectId = null;
     modalExamPeriodId = null;
+    pendingWithdrawRegistrationId = null;
 
     subjects = [];
     examPeriods = [];
@@ -26,6 +27,7 @@ export default class RegistrationOverview extends LightningElement {
     modalExamPeriods = [];
 
     showRegistrationModal = false;
+    showWithdrawConfirmation = false;
     wiredRegistrationsResult;
 
     @wire(getStudents)
@@ -205,13 +207,24 @@ export default class RegistrationOverview extends LightningElement {
         }
     }
 
-    async handleUnregister(event) {
+    handleUnregister(event) {
+        this.pendingWithdrawRegistrationId = event.currentTarget.dataset.id;
+        this.showWithdrawConfirmation = true;
+    }
+
+    closeWithdrawConfirmation() {
+        this.showWithdrawConfirmation = false;
+        this.pendingWithdrawRegistrationId = null;
+    }
+
+    async confirmWithdraw() {
         try {
             await unregisterStudent({
-                registrationId: event.currentTarget.dataset.id
+                registrationId: this.pendingWithdrawRegistrationId
             });
 
             this.showToast('Success', 'Student withdrawn successfully.', 'success');
+            this.closeWithdrawConfirmation();
             await refreshApex(this.wiredRegistrationsResult);
         } catch (error) {
             this.showError(error, 'Unable to withdraw student.');
